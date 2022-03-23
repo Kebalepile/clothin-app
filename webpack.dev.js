@@ -48,7 +48,25 @@ module.exports = {
       },
       // favicon:".src/favicon/icon.png",
       template: "./index.html",
-    }),
+    }), new HTMLPlugin({
+      title: "rare match",
+      filename: "cart.html",
+      meta: {
+        discription: "clothing app",
+        author: "K.T Motshoana",
+      },
+      // favicon:".src/favicon/icon.png",
+      template: "./cart.html",
+    }), new HTMLPlugin({
+      title: "rare match",
+      filename: "scan.html",
+      meta: {
+        discription: "clothing app",
+        author: "K.T Motshoana",
+      },
+      // favicon:".src/favicon/icon.png",
+      template: "./scan.html",
+    })
   ],
   devServer: {
     static: {
