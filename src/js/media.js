@@ -1,5 +1,5 @@
 import displayBarCode from "./displayQrCode.js";
-
+import qrCodeScanner from "./barcodeDetection.js";
 async function getMedia(
   options = { audio: false, video: { facingMode: { exact: "environment" } } }
 ) {
@@ -23,33 +23,61 @@ async function captureBarCode(imgCapture) {
     console.error(err);
   }
 }
+
 // @ discription: connects HTML Elements to relative Js bits.
 export default async function captureImage(scanner) {
   try {
     const mediaStream = await getMedia();
-    //    remove later.
-    const video = document.querySelector("video");
+    const video = document.querySelector("section#qrcodescanner > video");
     video.srcObject = mediaStream;
-    const btn = document.createElement("button");
-    btn.textContent = "scan";
-    btn.addEventListener("click", async (e) => {
-      console.log("clicked");
+    video.play();
+
+    let intervalID = setInterval(async () => {
       try {
-        const imgBitMap = await captureBarCode(imgCapture);
-        const detectedBarCodes = await scanner.detect(imgBitMap);
-        console.dir(detectedBarCodes);
+        let track = mediaStream.getVideoTracks()[0],
+          imgCapture = new ImageCapture(track),
+          imgBitMap = await captureBarCode(imgCapture),
+          detectedBarCodes = await scanner.detect(imgBitMap);
+          let tag = document.createElement("p");
+          tag.id = "qrcodedata";
         if (detectedBarCodes.length != 0) {
-          detectedBarCodes.forEach((barcode) => displayBarCode(barcode));
+          let barcode = detectedBarCodes[0];
+          console.log(barcode)
+            tag.textContent =`qrCode value is: ${ barcode.rawValue}`;
+            document.querySelector("#qrcodes").appendChild(tag);
+        
+            displayBarCode(barcode);
+          disableStream(video.srcObject, video);
+          clearInterval(intervalID);
         }
       } catch (err) {
         console.error(err);
       }
-    });
-    document.body.appendChild(btn);
-    // remove later.
-    const track = mediaStream.getVideoTracks()[0];
-    const imgCapture = new ImageCapture(track);
+    }, 1000);
   } catch (err) {
     console.error(err);
+  }
+}
+
+function disableStream(stream, videoElem) {
+  if (stream.active) {
+    let tracks = stream.getVideoTracks();
+    tracks.forEach((track) => track.stop());
+    videoElem.srcObject = null;
+
+    let btn = document.querySelector("#scanQrCode");
+    btn.style.display = "inline-block";
+
+    let cb = (e) => {
+      btn.style.display = "none";
+      let parentNode = document.querySelector("#qrcodes");
+      while(parentNode.hasChildNodes()){
+        parentNode.removeChild(parentNode.firstChild);
+      }
+      btn.removeEventListener('click',cb);
+      qrCodeScanner();
+    };
+    btn.addEventListener("click", cb);
+    return;
   }
 }

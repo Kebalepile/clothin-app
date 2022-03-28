@@ -11,7 +11,6 @@ export default async function ScanBarCode() {
 
     if (formats.includes("qr_code")) {
       // create new detector.
-    //   console.log(formats)
       console.log("BarcodeDetector Supported 😍");
       let scanner = new BarcodeDetector({ formats: ["qr_code"] });
      

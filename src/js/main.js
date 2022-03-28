@@ -4,14 +4,17 @@ import Merch from "./components/merch.js";
 import addQrCodeToWindow from "./QrCode.js";
 import ScanBarCode from "./barcodeDetection.js";
 
+
 window._componentState = {
   parentNode: document.querySelector("body"),
 };
 window.pathChanged = new Event("pathChanged");
+// router
 window.addEventListener("pathChanged", (e) => {
   console.log(location.pathname);
   switch (location.pathname) {
     case "/scan.html":
+      ScanBarCode();
     case "/cart.html":
       _componentState.parentNode.removeChild(_componentState["merch-card"]);
       break;
@@ -27,5 +30,5 @@ window.addEventListener("load", (e) => {
 Logo();
 Navbar();
 Merch();
-// addQrCodeToWindow();
-// ScanBarCode();
+addQrCodeToWindow();
+

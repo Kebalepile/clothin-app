@@ -13,6 +13,30 @@ template.innerHTML = `
 <li id="search">search</li>
 <li id="cart">cart</li>
 </ul>
+<section id="about-us" style="display: none;">
+<p><b>About Us :</b> <br>
+<!-- add proper information on final Web Application. -->
+    Sit in aliqua exercitation voluptate.
+    Tempor magna aute et nisi. Dolor voluptate do mollit excepteur et ex.
+    Dolor in veniam ut minim nisi commodo aute. Eiusmod occaecat cupidatat aliqua ex et ullamco fugiat nisi
+    eiusmod adipisicing qui nulla eiusmod.
+    Fugiat aliquip laboris aute eu. Nostrud proident dolor non ullamco ut occaecat aliquip quis.
+    Ex labore veniam elit anim est deserunt velit.
+</p>
+<br>
+<button>Close</button>
+<br>
+<p>Copyright @ K.T Motshoana 2022</p>
+</section>
+<section id="contact-us" style="display: none;">
+<p><b>Contact Us:</b><br>
+    Email: pimpabutterfly86@gmail.com <br>
+    Phone Number: +27239405819 <br>
+    Telegram</p>
+<br>
+<button>Close</button>
+</section>
+<input type="text" name="search" id="search-input" disabled=true placeholder="search shit." style="display:none;">
 `;
 
 class Navbar extends HTMLElement {
@@ -32,10 +56,19 @@ class Navbar extends HTMLElement {
     }
     return this.shadowRoot.querySelector(str);
   }
+  toggleSearch() {
+    const self = this.shadowRoot,
+      tag = self.querySelector("input[name=search]");
+    tag.style.display != "block"
+      ? (tag.style.display = "block")
+      : (tag.style.display = "none");
 
+    // add on submit function on search input.
+  }
   connectedCallback() {
     let menu = this.getElement("li#menu"),
       cart = this.getElement("li#cart"),
+      search = this.getElement("#search"),
       elems = this.getElement([
         "li#home",
         "li#about",
@@ -47,59 +80,74 @@ class Navbar extends HTMLElement {
       this.hideMenu ? (this.hideMenu = false) : (this.hideMenu = true);
       this.toggleMenu();
     });
-    cart.addEventListener("click", (e) => this.changeURL(e.target.id));
-
+    cart.addEventListener("click", (e) => this.tagProcess(e.target.id));
+    search.addEventListener("click", (e) => {
+      this.toggleSearch();
+    });
     elems.forEach((elem) =>
       elem.addEventListener("click", (e) => {
-        // change url to respective path.
-        console.log(`clicked ${e.target.id} element.`);
-
-        this.changeURL(e.target.id);
+        this.tagProcess(e.target.id);
       })
     );
   }
-  changeURL(id) {
+  toggleTag(ids) {
+    let tag = this.shadowRoot.querySelector(ids[0]);
+    tag.style.display != "block"
+      ? (tag.style.display = "block")
+      : (tag.style.display = "none");
+    let tag2 = this.shadowRoot.querySelector(ids[1]);
+    if (tag2.style.display != "none") {
+      tag2.style.display = "none";
+    }
+  }
+  tagProcess(id) {
     switch (id) {
       case "home":
         this.hideMenu ? (this.hideMenu = false) : (this.hideMenu = true);
         this.toggleMenu();
-        console.log(location.pathname);
         break;
       case "about":
+        let ids = ["#about-us", "#contact-us"];
+        this.toggleTag(ids);
+        let btn = this.shadowRoot.querySelector("#about-us > button");
+        btn.addEventListener("click", (e) => {
+          let tag = this.shadowRoot.querySelector("#about-us");
+          tag.style.display != "block"
+            ? (tag.style.display = "block")
+            : (tag.style.display = "none");
+        });
         break;
       case "contact":
+        ids = ["#contact-us", "#about-us"];
+        this.toggleTag(ids);
+        btn = this.shadowRoot.querySelector("#contact-us > button");
+        btn.addEventListener("click", (e) => {
+          let tag = this.shadowRoot.querySelector("#contact-us");
+          tag.style.display != "block"
+            ? (tag.style.display = "block")
+            : (tag.style.display = "none");
+        });
         break;
       case "scanProduct":
         if (location.pathname !== "/scan.html") {
           location.assign("/scan.html");
-
-          break;
         }
         break;
-        case "cart":
-          if (location.pathname !== "/cart.html") {
-            location.assign("/cart.html");
-  
-            break;
-          }
-          break;
+      case "cart":
+        if (location.pathname !== "/cart.html") {
+          location.assign("/cart.html");
+        }
+        break;
       default:
         break;
     }
   }
   toggleMenu() {
     const sidebar = this.shadowRoot.querySelector("section#sidebar");
-    switch (this.hideMenu) {
-      case true:
-        sidebar.style["display"] = "none";
-        break;
-      case false:
-        sidebar.style["display"] = "inline-block";
-        break;
-      default:
-        sidebar.style["display"] = "none";
-        break;
-    }
+    this.hideMenu
+      ? (sidebar.style["display"] = "none")
+      : (sidebar.style["display"] = "inline-block");
+   
   }
 
   disconnectedCallback() {

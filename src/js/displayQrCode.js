@@ -65,14 +65,14 @@ export default function displayBarCode(barcode) {
       // example: { "id1": "string1", "id2": "string2"}
       //		"id1" is the id of a div element where you want a QRCode inserted.
       //		"string1" is the string you want encoded into the QRCode.
-      showQrCode(keyValuePair, sizeMultiplier) {
-        let value = keyValuePair["value"],
-          elem = document.createElement("section");
-        elem.id = "qrCode";
+      showQrCode(map, sizeMultiplier) {
+        let value = map["value"],
+          elem = document.querySelector(map.id);
+
         elem.appendChild(qrC.createCanvas(value, sizeMultiplier));
-        document.body.appendChild(elem);
+      
       },
     };
 
-  qrC.showQrCode({ id: "scanner-wrapper", value });
+  qrC.showQrCode({ id: "#qrcodes", value },9);
 }
