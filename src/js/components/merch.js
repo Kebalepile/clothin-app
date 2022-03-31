@@ -1,81 +1,12 @@
-import tshirt from "./images/mens-fitted-t-shirt-.png";
+import t1 from "./images/mens-fitted-t-shirt-.png";
+import t2 from "./images/mens-fitted-t-shirt-midnight.png";
+import t3 from "./images/Unisex_T-Shirts_460x.png";
+import t4 from "./images/Women_s_T-Shirts_460x.png";
+import css  from "./css.js";
 const template = document.createElement("template");
 template.innerHTML = `
-<style>
-.product-card {
-
-display:flex;
-flex-flow: row wrap;
-justify-content: center;
-align-items:center;
-background-color:white;
-color:#3B3636;
-width:60vw;
-height:70vh;
-margin:auto;
-border-radius:2px;
-padding:10px;
-}
-.product-card img{
-  width:200px;
-  height:200px;
-}
-.product-card  button {
-  color:white;
-  width:70px;
-  height:30px;
-  background-color: #228B22;
-  backdrop-filter: blur(2px);
-  border:none;
-  border-radius:2px;
-  margin-right: 25px;
-}
-.product-card  select {
-  background-color:#676CE4;
-  color:white;
-  border:none;
-  border-radius:2px;
-  height:30px;
-  width:40px;
-  text-align:right;
-
-}
-.product-card div {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bold;
-}
-#info{
-  background-color:gray;
-  border-radius:2px;
-  color:#511db9;
-  height:130px;
-  width:200px;
-  text-align:justify;
-  display:flex;
-  flex-flow:column wrap;
-  align-item:center;
-  justify-content:center;
-  padding-left:15px;
-}
-
-</style>
-<section class="product-card">
-    <img src="${tshirt}" alt="product image" />
-   <section id="info">
-
-    <div id="name">Type : </div>
-    <div id="price">Price : </div>
-    <div id="quantity">Available in stock : </div>
-    <div id="madeIn">Made In : </div>
-    <div id="febric">Febric : </div>
-    
-   </section>
-   <button id="buy">BUY</button>
-    <select name="qty">
-        <option value="1" > 1</option>
-        <option value="2" > 2</option>
-    </select>
-</section>`;
+${css()}
+`;
 
 class Merch extends HTMLElement {
   constructor(info) {
@@ -86,7 +17,9 @@ class Merch extends HTMLElement {
     this.info = info;
   }
   getElements(names) {
-    let childNodes = this.shadowRoot.querySelector(".product-card > #info").childNodes;
+    let childNodes = this.shadowRoot.querySelector(
+      ".product-card > #info"
+    ).childNodes;
     childNodes = Array.from(childNodes);
     return childNodes.filter((node) => {
       let elems = [];
@@ -97,41 +30,112 @@ class Merch extends HTMLElement {
     });
   }
   render() {
-    let ids = ["#name", "#price", "#quantity", "#febric", "#madeIn"],
-      elements = this.getElements(ids.map((id) => id.slice[1]));
+    this.productCard();
+  }
 
-    elements.forEach((elem) => {
-      if (elem.nodeName !== "#text") {
-        ids.forEach((id) => {
-          id = id.slice(1);
-          let val = this.info[id],
-          span = document.createElement("span");
-          span.textContent = val;
-          span.style.color = "black";
-          if (elem.id == id) {
-            elem.appendChild(span);
-          }
-        });
+  productCard() {
+    // this.info should be an array of objects.
+
+    this.info.forEach((obj) => {
+      let card = document.createElement("section"),
+        info = document.createElement("section"),
+        img = document.createElement("img"),
+        btn = document.createElement("button"),
+        select = document.createElement("select"),
+        sec = document.createElement("section"),
+        count = 0,
+        options = [],
+        divs = [];
+
+      while (count != 2) {
+        if (count > 0) {
+          let op = document.createElement("option");
+          op.value = count;
+          op.textContent = count;
+          options.push(op);
+        }
+        count++;
       }
+      btn.textContent = "Buy";
+      btn.addEventListener("click", (e) => {
+        alert("Functionality under construction Poi.");
+      });
+      /*
+      remove this above event and add proper functionality.
+       */
+      sec.appendChild(btn);
+      options.forEach((op) => select.appendChild(op));
+      sec.appendChild(select);
+
+      count = 0;
+      let ids = ["#name", "#price", "#quantity", "#febric", "#madeIn"];
+      while (count != 5) {
+        let div = document.createElement("div");
+        div.setAttribute("id", ids[count]);
+        divs.push(div);
+        count++;
+      }
+      divs.forEach((div) => {
+        let span = document.createElement("span");
+        span.style.color = "black";
+        span.textContent = obj[div.id.slice(1)];
+        div.textContent = `${div.id.slice(1)} : `;
+        div.appendChild(span);
+        info.appendChild(div);
+      });
+
+      info.setAttribute("id", "info");
+      img.src = obj.img;
+      img.alt = "product image.";
+      card.setAttribute("class", "product-card");
+      card.appendChild(img);
+      card.appendChild(info);
+      card.appendChild(sec);
+      this.shadowRoot.appendChild(card);
     });
   }
+
   connectedCallback() {
     console.log("custom product element mounted on.");
     this.render();
   }
-
-  disconnectedCallback() {
-    console.log("custom product element removed from page.");
-  }
 }
 export default function product(
-  info = {
-    name: "round neck",
-    price: "R150.00",
-    febric: "100% cotten",
-    madeIn: "South Africa",
-    quantity: "1",
-  }
+  // remove this when connecting to database.
+  info = [
+    {
+      name: "Men Fitted T",
+      price: "R150.00",
+      febric: "100% cotten",
+      madeIn: "South Africa",
+      quantity: "1",
+      img: t1,
+    },
+    {
+      name: "Men Fitted T",
+      price: "R150.00",
+      febric: "100% cotten",
+      madeIn: "South Africa",
+      quantity: "1",
+      img: t2,
+    },
+    {
+      name: "Unisex T",
+      price: "R150.00",
+      febric: "100% cotten",
+      madeIn: "South Africa",
+      quantity: "1",
+      img: t3,
+    },
+    {
+      name: "Women T",
+      price: "R150.00",
+      febric: "100% cotten",
+      madeIn: "South Africa",
+      quantity: "1",
+      img: t4,
+    },
+  ]
 ) {
   try {
     window.customElements.define("merch-card", Merch);

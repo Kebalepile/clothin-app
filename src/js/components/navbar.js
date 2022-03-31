@@ -1,107 +1,7 @@
+import css from "./css.js";
 const template = document.createElement("template");
 template.innerHTML = `
-<style>
-
-#navbar{
-  display:flex;
-  flex-flow: row nowrap;
-  width:100vw;
-  justify-content: center;
-  align-items:center;
-  background-color:white;
-  padding:2px;
-  position:fixed;
-  bottom:0;
-}
-#sidebar li {
-  z-index:2;
-}
-#sidebar svg {
-  z-index:0;
-}
-#navbar li {
-  z-index:2;
-}
-li{
-  list-style-type:none;
-}
-svg {
-  height:50px;
-  width:110px;
-  pointer-events: none;
-}
-#dot{
-  height: 79px;
-  width: 120px;
-  background-color: #3B3636;
-  border-radius: 27%;
-  display: inline-block;
-bottom:0;
-  position:fixed;
-  z-index:1;
-}
-
-#sidebar{
-  position:absolute;
-  bottom:20vh;
-  left:-1px;
-  display:none; 
-  flex-flow:column wrap; 
-  align-items:center;
-  justify-content:space-evenly;
-  padding:5px 5px 5px 0;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  width: 30vw;
-  height:60vh;
-  border: 1px solid white;
-  border-radius:2px;
-}
-.info-card{
-  position:absolute;
-  display:none;
-  flex-flow: column wrap;
-  align-items:center;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(5px);
-  width: 65vw;
-  margin: 10vh;
-  border: 1px solid white;
-  border-radius:3px;
-  font-size:15px;
-  text-align: left;
-  padding:10px;
-}
-.info-card > button {
-  color:white;
-  background-color:orange;
-  border-radius:3px;
-  border:none;
-  width:100px;
-  height:30px;
-  
-}
-.info-card a {
-  
-  text-decoration:none;
-  height:10px;
-  font-size:18px;
-  margin-bottom:25px;
-}
-.info-card > a > svg {
-  width:30px;
-  height:30px;
-}
- a:visited, a:active, a:link {
-   color:white;
- }
-#about-us{
-backdrop-filter:blur(20px);
-  text-shadow: 0 0 2px black;
-}
-
-</style>
-
+${css()}
 <ul id="sidebar">
     <li id="home">
 
@@ -153,7 +53,7 @@ backdrop-filter:blur(20px);
 </ul>
 
 <ul id="navbar">
-    <span id="dot"></span>
+   
     <li id="menu">
 
         <svg x="0px" y="0px" width="32px" height="32px" viewBox="0 0 32 32" enable-background="new 0 0 32 32"
@@ -174,7 +74,7 @@ backdrop-filter:blur(20px);
             <g id="icon">
                 <path
                     d="M19.974,22.54c-5.814,0,-10.526,-4.71,-10.526,-10.52S14.16,1.5,19.974,1.5S30.5,6.21,30.5,12.02S25.787,22.54,19.974,22.54zM1.6,30.4l10.861,-10.861"
-                    fill="#3B3636" stroke="#0C82E0" stroke-width="1" stroke-miterlimit="5" />
+                    fill="white" stroke="#0C82E0" stroke-width="1" stroke-miterlimit="5" />
             </g>
         </svg>
     </li>
@@ -260,7 +160,7 @@ backdrop-filter:blur(20px);
     <br>
     <button>Close</button>
 </section>
-<input type="text" name="search" id="search-input" disabled=true placeholder="search shit." style="display:none;">
+<input type="text" name="search" id="search-input" disabled=true placeholder="search shit.">
 `;
 
 class Navbar extends HTMLElement {
@@ -286,7 +186,7 @@ class Navbar extends HTMLElement {
       this.toggleSearch();
     });
     elems.forEach((elem) =>
-      elem.addEventListener("click", (e) => this.tagProcess(e.target.id))
+      elem.addEventListener("click", (e) =>  this.tagProcess(e.target.id))
     );
   
     
@@ -308,7 +208,9 @@ class Navbar extends HTMLElement {
       case "home":
         this.hideMenu ? (this.hideMenu = false) : (this.hideMenu = true);
         this.toggleMenu();
-
+        if(location.pathname !== "/"){
+          document.location.assign("/");
+         }
         break;
       case "about":
         let ids = ["#about-us", "#contact-us"];

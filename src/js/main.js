@@ -1,4 +1,5 @@
-import Logo from "./components/logo.js";
+
+// import Logo from "./components/logo.js";
 import Navbar from "./components/navbar.js";
 import Merch from "./components/merch.js";
 import addQrCodeToWindow from "./QrCode.js";
@@ -27,7 +28,7 @@ window.addEventListener("load", (e) => {
   window.dispatchEvent(pathChanged);
   console.log("loading");
 });
-Logo();
+// Logo();
 Navbar();
 Merch();
 addQrCodeToWindow();

@@ -28,7 +28,8 @@ async function captureBarCode(imgCapture) {
 export default async function captureImage(scanner) {
   try {
     const mediaStream = await getMedia();
-    const video = document.querySelector("section#qrcodescanner > video");
+    const video = document.querySelector("video#scanner");
+    video.style.display ="block";
     video.srcObject = mediaStream;
     video.play();
 
@@ -64,7 +65,7 @@ function disableStream(stream, videoElem) {
     let tracks = stream.getVideoTracks();
     tracks.forEach((track) => track.stop());
     videoElem.srcObject = null;
-
+videoElem.style.display = "none";
     let btn = document.querySelector("#scanQrCode");
     btn.style.display = "inline-block";
 
